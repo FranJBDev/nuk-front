@@ -34,8 +34,6 @@ export default async function handler(req, res) {
     }
   }
 
-  console.log('line_items', line_items);
-
   const orderDoc = await Order.create({
     line_items,
     name,
