@@ -80,6 +80,12 @@ export default function CartPage() {
     removeProduct(id)
   }
 
+  let total = 0
+  for (const productId of cartProducts){
+    const price = products.find(p=>p._id === productId)?.price || 0
+    total += price
+  }
+
   return (
     <div>
       <Header />
@@ -125,6 +131,11 @@ export default function CartPage() {
                       </td>
                     </tr>
                   ))}
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Total ${total}</td>
+                  </tr>
                 </tbody>
               </Table>
             )}
