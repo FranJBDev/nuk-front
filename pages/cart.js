@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import Table from '@/components/Table';
+import Input from '@/components/Input';
 
 const ColumnsWrapper = styled.div`
   display: grid;
@@ -60,15 +61,29 @@ const QuantityLabel = styled.span`
   }
 `;
 
+const CityHolder = styled.div`
+  display: flex;
+  gap: 5px;
+`;
+
 export default function CartPage() {
   const { cartProducts, addProduct, removeProduct } = useContext(CartContext);
   const [products, setProducts] = useState([]);
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [city, setCity] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [streetAddress, setStreetAddress] = useState('');
+  const [state, setState] = useState('');
 
   useEffect(() => {
     if (cartProducts.length > 0) {
       axios.post('/api/cart', { ids: cartProducts }).then((response) => {
         setProducts(response.data);
       });
+    } else {
+      setProducts([]);
     }
   }, [cartProducts]);
 
@@ -77,13 +92,28 @@ export default function CartPage() {
   }
 
   function lessOfThisProduct(id) {
-    removeProduct(id)
+    removeProduct(id);
   }
 
-  let total = 0
-  for (const productId of cartProducts){
-    const price = products.find(p=>p._id === productId)?.price || 0
-    total += price
+  async function goToPayment() {
+    const response = await axios.post('/api/checkout', {
+      name,
+      email,
+      city,
+      postalCode,
+      streetAddress,
+      state,
+      cartProducts,
+    });
+    if (response.data.url) {
+      window.location = response.data.url;
+    }
+  }
+
+  let total = 0;
+  for (const productId of cartProducts) {
+    const price = products.find((p) => p._id === productId)?.price || 0;
+    total += price;
   }
 
   return (
@@ -134,7 +164,7 @@ export default function CartPage() {
                   <tr>
                     <td></td>
                     <td></td>
-                    <td>Total ${total}</td>
+                    <td>Total ${total.toFixed(2)}</td>
                   </tr>
                 </tbody>
               </Table>
@@ -143,9 +173,51 @@ export default function CartPage() {
           {!!cartProducts?.length && (
             <Box>
               <h2>Order information</h2>
-              <input type="text" placeholder="Address 1" />
-              <input type="text" placeholder="Address 2" />
-              <Button black block>
+              <Input
+                type="text"
+                placeholder="Name"
+                value={name}
+                name="name"
+                onChange={(ev) => setName(ev.target.value)}
+              />
+              <Input
+                type="text"
+                placeholder="Email"
+                value={email}
+                name="email"
+                onChange={(ev) => setEmail(ev.target.value)}
+              />
+              <CityHolder>
+                <Input
+                  type="text"
+                  placeholder="City"
+                  value={city}
+                  name="city"
+                  onChange={(ev) => setCity(ev.target.value)}
+                />
+                <Input
+                  type="text"
+                  placeholder="Postal Code"
+                  value={postalCode}
+                  name="postalCode"
+                  onChange={(ev) => setPostalCode(ev.target.value)}
+                />
+              </CityHolder>
+              <Input
+                type="text"
+                placeholder="Street Address"
+                value={streetAddress}
+                name="streetAddress"
+                onChange={(ev) => setStreetAddress(ev.target.value)}
+              />
+              <Input
+                type="text"
+                placeholder="State"
+                value={state}
+                name="state"
+                onChange={(ev) => setState(ev.target.value)}
+              />
+              <Button onClick={goToPayment} black block>
                 Continue to payment
               </Button>
             </Box>
