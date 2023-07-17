@@ -73,7 +73,7 @@ export default function ProductBox({ _id, title, description, price, images }) {
           <Price>${price}</Price>
           <Button block onClick={() => addProduct(_id)} primary outline>
             {/* <CartIcon /> */}
-            Add to cart
+            Agregar al carrito
           </Button>
         </PriceRow>
       </ProductInfoBox>

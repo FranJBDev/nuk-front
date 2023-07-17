@@ -18,7 +18,7 @@ export default function NewProducts({ products }) {
   }
   return (
     <Center>
-      <Title>New Arrivals</Title>
+      <Title>Ultimos Productos</Title>
       <ProductsGrid products={products}/>
     </Center>
   );

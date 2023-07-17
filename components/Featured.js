@@ -84,11 +84,11 @@ export default function Featured({ product }) {
                   white={1}
                   size="l"
                 >
-                  Read more
+                  Leer mas
                 </ButtonLink>
                 <Button white onClick={addFeaturedToCart}>
                   <CartIcon />
-                  Add to cart
+                  Agregar al carrito
                 </Button>
               </ButtonsWrapper>
             </div>

@@ -17,7 +17,7 @@ export default function CategoriesPage({ mainCategories, categoriesProducts }) {
     <>
       <Header />
       <Center>
-        <Title>All Categories</Title>
+        <Title>Todas Las Categorias</Title>
         {mainCategories.map((cat) => (
           <div key={cat._id}>
             <h2>{cat.name}</h2>

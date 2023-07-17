@@ -150,14 +150,14 @@ export default function CartPage() {
         <ColumnsWrapper>
           <Box>
             <h2>Cart</h2>
-            {!cartProducts?.length && <div>Your cart is empty</div>}
+            {!cartProducts?.length && <div>Tu carrito Esta Vacio</div>}
             {products?.length > 0 && (
               <Table>
                 <thead>
                   <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
                   </tr>
                 </thead>
 
@@ -199,17 +199,17 @@ export default function CartPage() {
           </Box>
           {!!cartProducts?.length && (
             <Box>
-              <h2>Order information</h2>
+              <h2>Información De La Orden</h2>
               <Input
                 type="text"
-                placeholder="Name"
+                placeholder="Nombre"
                 value={name}
                 name="name"
                 onChange={(ev) => setName(ev.target.value)}
               />
               <Input
                 type="text"
-                placeholder="Email"
+                placeholder="Correo"
                 value={email}
                 name="email"
                 onChange={(ev) => setEmail(ev.target.value)}
@@ -217,14 +217,14 @@ export default function CartPage() {
               <CityHolder>
                 <Input
                   type="text"
-                  placeholder="City"
+                  placeholder="Ciudad"
                   value={city}
                   name="city"
                   onChange={(ev) => setCity(ev.target.value)}
                 />
                 <Input
                   type="text"
-                  placeholder="Postal Code"
+                  placeholder="Codigo Postal"
                   value={postalCode}
                   name="postalCode"
                   onChange={(ev) => setPostalCode(ev.target.value)}
@@ -232,20 +232,20 @@ export default function CartPage() {
               </CityHolder>
               <Input
                 type="text"
-                placeholder="Street Address"
+                placeholder="Dirección"
                 value={streetAddress}
                 name="streetAddress"
                 onChange={(ev) => setStreetAddress(ev.target.value)}
               />
               <Input
                 type="text"
-                placeholder="State"
+                placeholder="Estado"
                 value={state}
                 name="state"
                 onChange={(ev) => setState(ev.target.value)}
               />
               <Button onClick={goToPayment} black block>
-                Continue to payment
+                Continua Con El Pago
               </Button>
             </Box>
           )}
