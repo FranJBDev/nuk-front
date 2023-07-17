@@ -54,7 +54,7 @@ export default function ProductPage({ product }) {
                 onClick={()=> addProduct(product._id)}
                 primary>
                   <CartIcon />
-                  Add to cart
+                  Agregar Al Carrito
                 </Button>
               </div>
             </PriceRow>
