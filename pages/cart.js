@@ -10,7 +10,7 @@ import Input from '@/components/Input';
 
 const ColumnsWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
+  grid-template-columns: 1fr;
   @media screen and (min-width: 768px) {
     grid-template-columns: 1.2fr 0.8fr;
   }
@@ -168,7 +168,7 @@ export default function CartPage() {
                         <ProductImageBox>
                           <img src={product.images[0]} alt="" />
                         </ProductImageBox>
-                        {product.title}:{' '}
+                        {product.title}
                       </ProductInfoCell>
                       <QuantityLabel>
                         <Button onClick={() => lessOfThisProduct(product._id)}>

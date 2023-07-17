@@ -2,9 +2,7 @@ import { primary } from '@/lib/colors';
 import styled, { css } from 'styled-components';
 
 export const ButtonStyle = css`
-  background-color: ${primary};
   border: 0;
-  color: #fff;
   padding: 5px 15px;
   border-radius: 5px;
   cursor: pointer;
@@ -37,7 +35,7 @@ export const ButtonStyle = css`
     props.outline &&
     css`
       background-color: transparent;
-      color: #000;
+      color: #fff;
       border: 1px solid #fff;
     `}
 

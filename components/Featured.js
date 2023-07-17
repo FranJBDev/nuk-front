@@ -15,7 +15,10 @@ const Bg = styled.div`
 const Title = styled.h1`
   margin: 0;
   font-weight: normal;
-  font-size: 3rem;
+  font-size: 1.5rem;
+  @media screen and (min-width: 768px) {
+    font-size: 3rem;
+  }
 `;
 
 const Desc = styled.p`
@@ -33,15 +36,17 @@ const ColumnsWrapper = styled.div`
     display: block;
     margin: 0 auto;
   }
+
   div:nth-child(1) {
     order: 2;
   }
+
   @media screen and (min-width: 768px) {
     grid-template-columns: 1.1fr 0.9fr;
     div:nth-child(1) {
       order: 0;
     }
-    img{
+    img {
       max-width: 100%;
     }
   }
@@ -59,10 +64,10 @@ const ButtonsWrapper = styled.div`
 `;
 
 export default function Featured({ product }) {
-  const {addProduct} = useContext(CartContext)
+  const { addProduct } = useContext(CartContext);
 
-  function addFeaturedToCart(){
-    addProduct(product._id)
+  function addFeaturedToCart() {
+    addProduct(product._id);
   }
   return (
     <Bg>
@@ -71,10 +76,10 @@ export default function Featured({ product }) {
           <Column>
             <div>
               <Title>{product.title}</Title>
-              <Desc>{product.description}</Desc>
+              <Desc>{product.description.substring(0,150)}...</Desc>
               <ButtonsWrapper>
                 <ButtonLink
-                  href={'/products/' + product._id}
+                  href={'/product/' + product._id}
                   outline={1}
                   white={1}
                   size="l"
