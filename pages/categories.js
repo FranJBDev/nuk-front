@@ -4,12 +4,47 @@ import ProductBox from '@/components/ProductBox';
 import Title from '@/components/Title';
 import { Category } from '@/models/Category';
 import { Product } from '@/models/Product';
+import Link from 'next/link';
 import styled from 'styled-components';
 
 const CategoryGrid = styled.div`
-    display: grid;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  @media screen and (min-width: 768px) {
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 30px;
+  }
+`;
+
+const CategoryTitle = styled.div`
+display: flex;
+  margin-top: 0;
+  margin-bottom: 0;
+  align-items: center;
+  gap: 15px;
+  h2{
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+  a{
+    color: #555;
+    display: inline-block;
+  }
+`;
+
+const CategoryWrapper = styled.div`
+  margin-bottom: 40px;
+`;
+
+const ShowAllSquare = styled(Link)`
+    background-color: #ddd;
+    height: 160px;
+    border-radius: 10px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    color: #555;
+    text-decoration: none;
 `
 
 export default function CategoriesPage({ mainCategories, categoriesProducts }) {
@@ -19,14 +54,19 @@ export default function CategoriesPage({ mainCategories, categoriesProducts }) {
       <Center>
         <Title>Todas Las Categorias</Title>
         {mainCategories.map((cat) => (
-          <div key={cat._id}>
-            <h2>{cat.name}</h2>
+          <CategoryWrapper key={cat._id}>
+            <CategoryTitle>
+              <h2>{cat.name}</h2>
+              <div><Link href={'/category/' + cat._id}>Mostrar Todos</Link></div>
+            </CategoryTitle>
+            
             <CategoryGrid>
               {categoriesProducts[cat._id].map((p) => (
                 <ProductBox key={p._id} {...p} />
               ))}
+              <ShowAllSquare href={'/category/'+cat._id}>Mostrar Todos &rarr;</ShowAllSquare>
             </CategoryGrid>
-          </div>
+          </CategoryWrapper>
         ))}
       </Center>
     </>
@@ -42,7 +82,7 @@ export async function getServerSideProps() {
     const childCatIds = categories
       .filter((c) => c?.parent?.toString() === mainCatId)
       .map((c) => c._id);
-    const categoriesIds = [mainCatId, ...childCatIds]
+    const categoriesIds = [mainCatId, ...childCatIds];
     const products = await Product.find({ category: categoriesIds }, null, {
       limit: 3,
       sort: { _id: -1 },

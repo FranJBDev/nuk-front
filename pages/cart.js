@@ -134,8 +134,8 @@ export default function CartPage() {
         <Center>
           <ColumnsWrapper>
             <Box>
-              <h1>Thanks for your order!</h1>
-              <p>We will email you when your order will be sent.</p>
+              <h1>Gracias por tu compra</h1>
+              <p>Enviaremos un correo cuando tu orden sea enviada.</p>
             </Box>
           </ColumnsWrapper>
         </Center>
@@ -149,7 +149,7 @@ export default function CartPage() {
       <Center>
         <ColumnsWrapper>
           <Box>
-            <h2>Cart</h2>
+            <h2>Carrito</h2>
             {!cartProducts?.length && <div>Tu carrito Esta Vacio</div>}
             {products?.length > 0 && (
               <Table>
