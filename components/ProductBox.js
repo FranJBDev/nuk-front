@@ -1,9 +1,10 @@
 import styled from 'styled-components';
-import Button from '@/components/Button';
+import Button, { ButtonStyle } from '@/components/Button';
 import CartIcon from './icons/CartIcon';
 import Link from 'next/link';
 import { useContext } from 'react';
 import { CartContext } from './CartContext';
+import FlyingButton from 'react-flying-item';
 
 const ProductWrapper = styled.div``;
 
@@ -56,6 +57,13 @@ const Price = styled.div`
   }
 `;
 
+const ButtonWrapper = styled.div`
+  button{
+    ${ButtonStyle}
+  }
+`
+
+
 export default function ProductBox({ _id, title, description, price, images }) {
   const { addProduct } = useContext(CartContext);
   const url = '/product/' + _id;
@@ -71,10 +79,18 @@ export default function ProductBox({ _id, title, description, price, images }) {
         <Title href={url}>{title}</Title>
         <PriceRow>
           <Price>${price}</Price>
-          <Button block onClick={() => addProduct(_id)} primary outline>
+          <ButtonWrapper onClick={()=> addProduct(_id)}>
+          <FlyingButton src={images?.[0]} targetTop={'5%'} targetLeft={'95%'}
+            flyingItemStyling={{
+              padding: '5px 15px'
+            }}
+          >
+            {/* <Button block onClick={() => addProduct(_id)} primary outline> */}
             {/* <CartIcon /> */}
             Agregar al carrito
-          </Button>
+            {/* </Button> */}
+          </FlyingButton>
+          </ButtonWrapper>
         </PriceRow>
       </ProductInfoBox>
     </ProductWrapper>
