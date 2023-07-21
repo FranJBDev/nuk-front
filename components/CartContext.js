@@ -1,5 +1,3 @@
-import { set } from 'mongoose';
-
 const { createContext, useState, useEffect } = require('react');
 
 export const CartContext = createContext({});
