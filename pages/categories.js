@@ -6,6 +6,7 @@ import { Category } from '@/models/Category';
 import { Product } from '@/models/Product';
 import Link from 'next/link';
 import styled from 'styled-components';
+import { RevealWrapper } from 'next-reveal';
 
 const CategoryGrid = styled.div`
   display: grid;
@@ -17,16 +18,16 @@ const CategoryGrid = styled.div`
 `;
 
 const CategoryTitle = styled.div`
-display: flex;
+  display: flex;
   margin-top: 0;
   margin-bottom: 0;
   align-items: center;
   gap: 15px;
-  h2{
+  h2 {
     margin-bottom: 10px;
     margin-top: 10px;
   }
-  a{
+  a {
     color: #555;
     display: inline-block;
   }
@@ -37,15 +38,15 @@ const CategoryWrapper = styled.div`
 `;
 
 const ShowAllSquare = styled(Link)`
-    background-color: #ddd;
-    height: 160px;
-    border-radius: 10px;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    color: #555;
-    text-decoration: none;
-`
+  background-color: #ddd;
+  height: 160px;
+  border-radius: 10px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  color: #555;
+  text-decoration: none;
+`;
 
 export default function CategoriesPage({ mainCategories, categoriesProducts }) {
   return (
@@ -57,14 +58,22 @@ export default function CategoriesPage({ mainCategories, categoriesProducts }) {
           <CategoryWrapper key={cat._id}>
             <CategoryTitle>
               <h2>{cat.name}</h2>
-              <div><Link href={'/category/' + cat._id}>Mostrar Todos</Link></div>
+              <div>
+                <Link href={'/category/' + cat._id}>Mostrar Todos</Link>
+              </div>
             </CategoryTitle>
-            
             <CategoryGrid>
-              {categoriesProducts[cat._id].map((p) => (
-                <ProductBox key={p._id} {...p} />
+              {categoriesProducts[cat._id].map((p, index) => (
+                <RevealWrapper key={p._id} delay={index * 50}>
+                  <ProductBox {...p} />                  
+                </RevealWrapper>
+                
               ))}
-              <ShowAllSquare href={'/category/'+cat._id}>Mostrar Todos &rarr;</ShowAllSquare>
+              <RevealWrapper delay={categoriesProducts[cat._id].length*50}>
+                    <ShowAllSquare href={'/category/' + cat._id}>
+                    Mostrar Todos &rarr;
+                  </ShowAllSquare>
+                </RevealWrapper>
             </CategoryGrid>
           </CategoryWrapper>
         ))}
