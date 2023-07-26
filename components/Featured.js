@@ -29,7 +29,7 @@ const ColumnsWrapper = styled.div`
   display: grid;
   grid-template-columns: 1.1fr;
   gap: 40px;
-  img {
+  img.main {
     max-width: 100%;
     max-height: 200px;
     display: block;
@@ -69,7 +69,7 @@ export default function Featured({ product }) {
         <ColumnsWrapper>
           <Column>
             <div>
-              <RevealWrapper origin={'left'}>
+              <RevealWrapper origin={'left'} delay={0}>
                 <Title>{product.title}</Title>
                 <Desc>{product.description.substring(0, 150)}...</Desc>
                 <ButtonsWrapper>
@@ -94,8 +94,8 @@ export default function Featured({ product }) {
             </div>
           </Column>
           <Column>
-            <RevealWrapper>
-              <img src={product.images[0]} alt="" />
+            <RevealWrapper delay={0}>
+              <img className={'main' } src={product.images[0]} alt="" />
             </RevealWrapper>
           </Column>
         </ColumnsWrapper>
