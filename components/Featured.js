@@ -82,7 +82,7 @@ export default function Featured({ product }) {
                     Leer mas
                   </ButtonLink>
                   <FlyingButton
-                    white
+                    white={1}
                     _id={product._id}
                     src={product.images?.[0]}
                   >
