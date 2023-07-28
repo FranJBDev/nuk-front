@@ -20,7 +20,6 @@ export default function AccountPage() {
   return (
     <>
       <Header />
-      {process.env.NEXT_PUBLIC_URL}
       <Center>
         <Title>Cuenta</Title>
         {session && (
