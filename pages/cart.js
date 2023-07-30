@@ -8,6 +8,7 @@ import axios from 'axios';
 import Table from '@/components/Table';
 import Input from '@/components/Input';
 import { RevealWrapper } from 'next-reveal';
+import { useSession } from 'next-auth/react';
 
 const ColumnsWrapper = styled.div`
   display: grid;
@@ -53,7 +54,7 @@ const ProductImageBox = styled.div`
   }
 `;
 
-const QuantityLabel = styled.span`
+const QuantityLabel = styled.td`
   padding: 0 15px;
   display: block;
   @media screen and (min-width: 768px) {
@@ -70,6 +71,7 @@ const CityHolder = styled.div`
 export default function CartPage() {
   const { cartProducts, addProduct, removeProduct, clearCart } =
     useContext(CartContext);
+  const {data: session} = useSession()
   const [products, setProducts] = useState([]);
 
   const [name, setName] = useState('');
@@ -98,7 +100,12 @@ export default function CartPage() {
       setIsSuccess(true);
       clearCart();
     }
+  }, []);
 
+  useEffect(()=>{
+    if (!session){
+      return
+    }
     axios.get('/api/address').then((response) => {
       const { name, email, city, postalCode, streetAddress, state } =
         response.data;
@@ -109,7 +116,7 @@ export default function CartPage() {
       setStreetAddress(streetAddress);
       setState(state);
     });
-  }, []);
+  }, [session])
 
   function moreOfThisProduct(id) {
     addProduct(id);
@@ -190,8 +197,7 @@ export default function CartPage() {
                           >
                             -
                           </Button>
-                          {
-                            cartProducts.filter((id) => id === product._id)
+                          {cartProducts.filter((id) => id === product._id)
                               .length
                           }
                           <Button

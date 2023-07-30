@@ -7,7 +7,7 @@ export default async function handle(req, res) {
   await mongooseConnect();
   const session = await getServerSession(req, res, authOptions);
   const user = session?.user
-  if (!user) res.json('No estas logueado')
+  if (!user) res.json('No user')
 
   if (req.method === 'PUT') {
     const address = await Address.findOne({ userEmail: user.email });
@@ -18,7 +18,6 @@ export default async function handle(req, res) {
     }
   }
   if (req.method === 'GET') {
-    console.log(user);
     const address = await Address.findOne({ userEmail: user.email });
     res.json(address);
   }

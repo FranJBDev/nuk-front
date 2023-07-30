@@ -17,11 +17,20 @@ const ColsWrapper = styled.div`
   grid-template-columns: 1.2fr 0.8fr;
   gap: 40px;
   margin: 40px 0;
+  p{
+    margin: 5px;
+  }
 `;
 
 const CityHolder = styled.div`
   display: flex;
   gap: 5px;
+`;
+
+const WishedProductGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
 `;
 
 export default function AccountPage() {
@@ -32,8 +41,9 @@ export default function AccountPage() {
   const [postalCode, setPostalCode] = useState('');
   const [streetAddress, setStreetAddress] = useState('');
   const [state, setState] = useState('');
-  const [loaded, setLoaded] = useState(false);
-  const [wishedProducts, setWishedProducts] = useState([])
+  const [addressLoaded, setAddressLoaded] = useState(true);
+  const [wishListLoaded, setWishListLoaded] = useState(true);
+  const [wishedProducts, setWishedProducts] = useState([]);
 
   async function logout() {
     await signOut({
@@ -53,9 +63,14 @@ export default function AccountPage() {
   }
 
   useEffect(() => {
+    if (!session) {
+      return;
+    }
+
+    setAddressLoaded(false);
+    setWishListLoaded(false);
     axios.get('/api/address').then((response) => {
-      if (response.data) {
-        const { name, email, city, postalCode, streetAddress, state } =
+      const { name, email, city, postalCode, streetAddress, state } =
         response.data;
       setName(name);
       setEmail(email);
@@ -63,15 +78,20 @@ export default function AccountPage() {
       setPostalCode(postalCode);
       setStreetAddress(streetAddress);
       setState(state);
-      setLoaded(true);
-      } else {setLoaded(true)}
-      
+      setAddressLoaded(true);
     });
 
-    axios.get('/api/wishlist').then(response=>{
-      if (response.data !== 'No user') setWishedProducts(response.data.map(wp=> wp.product))
-    })
-  }, []);
+    axios.get('/api/wishlist').then((response) => {
+      setWishedProducts(response.data.map((wp) => wp.product));
+      setWishListLoaded(true);
+    });
+  }, [session]);
+
+  function productRemovedFromWishlist(idToRemove) {
+    setWishedProducts((products) => {
+      return [...products.filter((p) => p._id.toString() !== idToRemove)];
+    });
+  }
 
   return (
     <>
@@ -82,19 +102,44 @@ export default function AccountPage() {
             <RevealWrapper delay={0}>
               <WhiteBox>
                 <h2>Lista de deseos</h2>
-                {wishedProducts.length > 0 && wishedProducts.map(wp =>(
-                  <ProductBox key={wp._id} {...wp} wished={true} />
-                ))}
+                {!wishListLoaded && <Spinner fullWidth={true} />}
+
+                {wishListLoaded && (
+                  <>
+                    <WishedProductGrid>
+                      {wishedProducts.length > 0 &&
+                        wishedProducts.map((wp) => (
+                          <ProductBox
+                            key={wp._id}
+                            {...wp}
+                            wished={true}
+                            onRemoveFromWishlist={productRemovedFromWishlist}
+                          />
+                        ))}
+                    </WishedProductGrid>
+
+                    {wishedProducts.length === 0 && (
+                      <>
+                        {session && <p>Tu lista esta vacia</p>}
+                        {!session && (
+                          <p>
+                            Ingresa para agregar productos a tu lista de deseos.
+                          </p>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
               </WhiteBox>
             </RevealWrapper>
           </div>
           <div>
             <RevealWrapper delay={100}>
               <WhiteBox>
-                <h2>Detalles</h2>
-                {!loaded && <Spinner fullWidth={true} />}
+                <h2>{session  ? 'Detalles' : 'Ingresar'}</h2>
+                {!addressLoaded && <Spinner fullWidth={true} />}
 
-                {loaded && (
+                {addressLoaded && session && (
                   <>
                     <Input
                       type="text"
@@ -154,7 +199,7 @@ export default function AccountPage() {
                 )}
                 {!session && (
                   <Button primary onClick={login}>
-                    Ingresar
+                    Ingresar con Google
                   </Button>
                 )}
               </WhiteBox>

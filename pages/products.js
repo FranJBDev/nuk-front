@@ -6,7 +6,7 @@ import { mongooseConnect } from '@/lib/mongoose';
 import { Product } from '@/models/Product';
 import { getServerSession } from 'next-auth';
 import styled from 'styled-components';
-import {authOptions} from "@/pages/api/auth/[...nextauth]";
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { WishedProduct } from '@/models/WishedProduct';
 import NewProducts from '@/components/NewProducts';
 
@@ -25,12 +25,15 @@ export default function ProductsPage({ products, wishedProducts }) {
 export async function getServerSideProps(ctx) {
   await mongooseConnect();
   const products = await Product.find({}, null, { sort: { _id: -1 } });
-  const session = await getServerSession(ctx.req, ctx.res, authOptions)
-  const user = session?.user
-  const wishedProducts = await WishedProduct.find({
-    userEmail: user?.email,
-    product: products.map(p=>p._id.toString())
-  })
+  const session = await getServerSession(ctx.req, ctx.res, authOptions);
+
+  const wishedProducts = session?.user
+    ? await WishedProduct.find({
+        userEmail: session?.user?.email,
+        product: products.map((p) => p._id.toString()),
+      })
+    : [];
+
   return {
     props: {
       products: JSON.parse(JSON.stringify(products)),

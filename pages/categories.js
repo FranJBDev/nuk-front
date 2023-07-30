@@ -108,11 +108,10 @@ const allFetchedProductsId = []
   }
 
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
-  const user = session?.user;
-  const wishedProducts = await WishedProduct.find({
-    userEmail: user?.email,
+  const wishedProducts = session?.user ? await WishedProduct.find({
+    userEmail: session?.user?.email,
     product: allFetchedProductsId,
-  });
+  }) : [];
 
   return {
     props: {
