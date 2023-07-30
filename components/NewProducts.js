@@ -10,7 +10,7 @@ const Title = styled.h2`
   font-weight: normal;
 `;
 
-export default function NewProducts({ products }) {
+export default function NewProducts({ products, wishedProducts }) {
   {
     products?.length > 0 &&
       products.map((product) => {
@@ -19,7 +19,7 @@ export default function NewProducts({ products }) {
   return (
     <Center>
       <Title>Ultimos Productos</Title>
-      <ProductsGrid products={products}/>
+      <ProductsGrid products={products} wishedProducts={wishedProducts}/>
     </Center>
   );
 }

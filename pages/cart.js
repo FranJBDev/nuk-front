@@ -78,7 +78,7 @@ export default function CartPage() {
   const [postalCode, setPostalCode] = useState('');
   const [streetAddress, setStreetAddress] = useState('');
   const [state, setState] = useState('');
-  const [issuccess, setIsSuccess] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
     if (cartProducts.length > 0) {
@@ -98,6 +98,17 @@ export default function CartPage() {
       setIsSuccess(true);
       clearCart();
     }
+
+    axios.get('/api/address').then((response) => {
+      const { name, email, city, postalCode, streetAddress, state } =
+        response.data;
+      setName(name);
+      setEmail(email);
+      setCity(city);
+      setPostalCode(postalCode);
+      setStreetAddress(streetAddress);
+      setState(state);
+    });
   }, []);
 
   function moreOfThisProduct(id) {
@@ -129,7 +140,7 @@ export default function CartPage() {
     total += price;
   }
 
-  if (issuccess) {
+  if (isSuccess) {
     return (
       <>
         <Header />

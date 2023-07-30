@@ -4,14 +4,18 @@ import CartIcon from './icons/CartIcon';
 import Link from 'next/link';
 import { CartContext } from './CartContext';
 import FlyingButton from './FlyingButton';
+import HeartOutlineIcon from './icons/HeartOutlineIcon';
+import { useEffect, useState } from 'react';
+import HeartSolidIcon from './icons/HeartSolidIcon';
+import axios from 'axios';
 // import FlyingButton from 'react-flying-item';
 
 const ProductWrapper = styled.div`
-button{
-  width: 100%;
-  text-align: center;
-  justify-content: center;
-}
+  button {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
 `;
 
 const WhiteBox = styled(Link)`
@@ -23,6 +27,7 @@ const WhiteBox = styled(Link)`
   align-items: center;
   justify-content: center;
   border-radius: 10px;
+  position: relative;
   img {
     max-width: 100%;
     max-height: 80px;
@@ -63,16 +68,57 @@ const Price = styled.div`
   }
 `;
 
+const WishListButton = styled.button`
+  border: 0;
+  width: 40px !important;
+  height: 40px;
+  padding: 10px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: transparent;
+  ${(props) =>
+    props.wished
+      ? `
+    color: red;
+  `
+      : `
+    color: black;
+  `}
+  svg {
+    width: 16px;
+  }
+`;
 
-
-export default function ProductBox({ _id, title, description, price, images }) {
-  
+export default function ProductBox({
+  _id,
+  title,
+  description,
+  price,
+  images,
+  wished = false,
+}) {
   const url = '/product/' + _id;
+  const [isWished, setIsWished] = useState(wished);
+
+  function addToWishlist(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const nextValue = !isWished;
+    axios.post('/api/wishlist', {
+      product: _id,
+    }).then(()=>{})
+    setIsWished(nextValue);
+  }
 
   return (
     <ProductWrapper>
       <WhiteBox href={url}>
         <div>
+          <WishListButton wished={isWished} onClick={addToWishlist}>
+            {isWished ? <HeartSolidIcon /> : <HeartOutlineIcon />}
+          </WishListButton>
           <img src={images?.[0]} alt="" />
         </div>
       </WhiteBox>
@@ -80,7 +126,9 @@ export default function ProductBox({ _id, title, description, price, images }) {
         <Title href={url}>{title}</Title>
         <PriceRow>
           <Price>${price}</Price>
-          <FlyingButton _id={_id} src={images?.[0]}>Agregar Al Carrito</FlyingButton>
+          <FlyingButton _id={_id} src={images?.[0]}>
+            Agregar Al Carrito
+          </FlyingButton>
         </PriceRow>
       </ProductInfoBox>
     </ProductWrapper>

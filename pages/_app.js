@@ -14,9 +14,18 @@ const GlobalStyles = createGlobalStyle`
     margin: 0;
     font-family: 'Poppins', sans-serif;
   }
+
+  hr{
+    display: block;
+    border: 0;
+    border-top: 1px solid #ccc;
+  }
 `;
 
-export default function App({ Component, pageProps: {session, ...pageProps} }) {
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}) {
   return (
     <>
       <GlobalStyles />
