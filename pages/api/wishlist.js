@@ -6,8 +6,9 @@ import { WishedProduct } from '@/models/WishedProduct';
 export default async function handle(req, res) {
   await mongooseConnect();
   const session = await getServerSession(req, res, authOptions);
-  const user = session?.user
-  if (!user) res.json('No estas logueado')
+  const user = session?.user;
+  if (!user) res.json('No user');
+
   if (req.method === 'POST') {
     const { product } = req.body;
     const wishedDoc = await WishedProduct.findOne({
@@ -24,5 +25,11 @@ export default async function handle(req, res) {
       });
       res.json('Created');
     }
+  }
+
+  if (req.method === 'GET') {
+    res.json(
+      await WishedProduct.find({ userEmail: user.email }).populate('product')
+    );
   }
 }

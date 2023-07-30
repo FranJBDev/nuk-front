@@ -2,6 +2,7 @@ import Button from '@/components/Button';
 import Center from '@/components/Center';
 import Header from '@/components/Header';
 import Input from '@/components/Input';
+import ProductBox from '@/components/ProductBox';
 import Spinner from '@/components/Spinner';
 import Title from '@/components/Title';
 import WhiteBox from '@/components/WhiteBox';
@@ -32,6 +33,7 @@ export default function AccountPage() {
   const [streetAddress, setStreetAddress] = useState('');
   const [state, setState] = useState('');
   const [loaded, setLoaded] = useState(false);
+  const [wishedProducts, setWishedProducts] = useState([])
 
   async function logout() {
     await signOut({
@@ -52,7 +54,8 @@ export default function AccountPage() {
 
   useEffect(() => {
     axios.get('/api/address').then((response) => {
-      const { name, email, city, postalCode, streetAddress, state } =
+      if (response.data) {
+        const { name, email, city, postalCode, streetAddress, state } =
         response.data;
       setName(name);
       setEmail(email);
@@ -61,7 +64,13 @@ export default function AccountPage() {
       setStreetAddress(streetAddress);
       setState(state);
       setLoaded(true);
+      } else {setLoaded(true)}
+      
     });
+
+    axios.get('/api/wishlist').then(response=>{
+      if (response.data !== 'No user') setWishedProducts(response.data.map(wp=> wp.product))
+    })
   }, []);
 
   return (
@@ -73,6 +82,9 @@ export default function AccountPage() {
             <RevealWrapper delay={0}>
               <WhiteBox>
                 <h2>Lista de deseos</h2>
+                {wishedProducts.length > 0 && wishedProducts.map(wp =>(
+                  <ProductBox key={wp._id} {...wp} wished={true} />
+                ))}
               </WhiteBox>
             </RevealWrapper>
           </div>
