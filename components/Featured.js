@@ -38,11 +38,14 @@ const ColumnsWrapper = styled.div`
 
   div:nth-child(1) {
     order: 2;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   @media screen and (min-width: 768px) {
     grid-template-columns: 1.1fr 0.9fr;
-    div:nth-child(1) {
+
+    & > div:nth-child(1) {
       order: 0;
     }
     img {
@@ -62,6 +65,25 @@ const ButtonsWrapper = styled.div`
   margin-top: 25px;
 `;
 
+const CenterImg = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
+const ImgColumn = styled(Column)`
+  & > div {
+    width: 100%;
+  }
+`;
+
+const ContentWrapper = styled.div`
+  * {
+    text-align: center;
+  }
+`;
+
 export default function Featured({ product }) {
   return (
     <Bg>
@@ -70,34 +92,38 @@ export default function Featured({ product }) {
           <Column>
             <div>
               <RevealWrapper origin={'left'} delay={0}>
-                <Title>{product.title}</Title>
-                <Desc>{product.description.substring(0, 150)}...</Desc>
-                <ButtonsWrapper>
-                  <ButtonLink
-                    href={'/product/' + product._id}
-                    outline={1}
-                    white={1}
-                    size="l"
-                  >
-                    Leer mas
-                  </ButtonLink>
-                  <FlyingButton
-                    white={1}
-                    _id={product._id}
-                    src={product.images?.[0]}
-                  >
-                    <CartIcon />
-                    Agregar al carrito
-                  </FlyingButton>
-                </ButtonsWrapper>
+                <ContentWrapper>
+                  <Title>{product.title}</Title>
+                  <Desc>{product.description.substring(0, 150)}...</Desc>
+                  <ButtonsWrapper>
+                    <ButtonLink
+                      href={'/product/' + product._id}
+                      outline={1}
+                      white={1}
+                      size="l"
+                    >
+                      Leer mas
+                    </ButtonLink>
+                    <FlyingButton
+                      white={1}
+                      _id={product._id}
+                      src={product.images?.[0]}
+                    >
+                      <CartIcon />
+                      Agregar al carrito
+                    </FlyingButton>
+                  </ButtonsWrapper>
+                </ContentWrapper>
               </RevealWrapper>
             </div>
           </Column>
-          <Column>
+          <ImgColumn>
             <RevealWrapper delay={0}>
-              <img className={'main' } src={product.images[0]} alt="" />
+              <CenterImg>
+                <img className={'main'} src={product?.images[0]} alt="" />
+              </CenterImg>
             </RevealWrapper>
-          </Column>
+          </ImgColumn>
         </ColumnsWrapper>
       </Center>
     </Bg>
