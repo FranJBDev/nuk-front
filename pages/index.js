@@ -5,7 +5,7 @@ import { mongooseConnect } from '@/lib/mongoose';
 import NewProducts from '@/components/NewProducts';
 import { WishedProduct } from '@/models/WishedProduct';
 import { getServerSession } from 'next-auth';
-import {authOptions} from "@/pages/api/auth/[...nextauth]";
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { Setting } from '@/models/Setting';
 
 export default function HomePage({
@@ -17,18 +17,17 @@ export default function HomePage({
     <div>
       <Header />
       <Featured product={featuredProduct} />
-      <NewProducts
-        products={newProducts}
-        wishedProducts={wishedNewProducts}
-      />
+      <NewProducts products={newProducts} wishedProducts={wishedNewProducts} />
     </div>
   );
 }
 
 export async function getServerSideProps(ctx) {
-  const featuredProductSetting = await Setting.findOne({name: 'featuredProductId'})
-  const featuredProductId = featuredProductSetting.value;
   await mongooseConnect();
+  const featuredProductSetting = await Setting.findOne({
+    name: 'featuredProductId',
+  });
+  const featuredProductId = featuredProductSetting.value;
 
   const featuredProduct = await Product.findById(featuredProductId);
   const newProducts = await Product.find({}, null, {
@@ -37,10 +36,12 @@ export async function getServerSideProps(ctx) {
   });
   // const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
-  const wishedNewProducts = session?.user ? await WishedProduct.find({
-    userEmail: session?.user.email,
-    product: newProducts.map((p) => p._id.toString()),
-  }) : [];
+  const wishedNewProducts = session?.user
+    ? await WishedProduct.find({
+        userEmail: session?.user.email,
+        product: newProducts.map((p) => p._id.toString()),
+      })
+    : [];
 
   return {
     props: {
