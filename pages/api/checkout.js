@@ -61,6 +61,7 @@ export default async function handler(req, res) {
     success_url: process.env.NEXT_PUBLIC_URL + '/cart?success=1',
     cancel_url: process.env.NEXT_PUBLIC_URL + '/cart?canceled=1',
     metadata: { orderId: orderDoc._id.toString() },
+    allow_promotion_codes: true,
     shipping_options: [
       {
         shipping_rate_data: {
