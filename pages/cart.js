@@ -18,6 +18,21 @@ const ColumnsWrapper = styled.div`
   }
   gap: 40px;
   margin-top: 40px;
+  margin-bottom: 40px;
+  table thead tr th:nth-child(3),
+  table tbody tr td:nth-child(3),
+  table tbody tr.subtotal td:nth-child(2) {
+    text-align: right;
+  }
+  table tr.subtotal td {
+    padding: 15px 0;
+  }
+  table tbody tr.subtotal td:nth-child(2) {
+    font-size: 1.4rem;
+  }
+  tr.total td{
+    font-weight: bold;
+  }
 `;
 
 const Box = styled.div`
@@ -71,7 +86,7 @@ const CityHolder = styled.div`
 export default function CartPage() {
   const { cartProducts, addProduct, removeProduct, clearCart } =
     useContext(CartContext);
-  const {data: session} = useSession()
+  const { data: session } = useSession();
   const [products, setProducts] = useState([]);
 
   const [name, setName] = useState('');
@@ -81,6 +96,7 @@ export default function CartPage() {
   const [streetAddress, setStreetAddress] = useState('');
   const [state, setState] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [shippingFee, setShippingFee] = useState(null);
 
   useEffect(() => {
     if (cartProducts.length > 0) {
@@ -100,11 +116,15 @@ export default function CartPage() {
       setIsSuccess(true);
       clearCart();
     }
+
+    axios.get('/api/settings?name=shippingFee').then((res) => {
+      setShippingFee(res.data.value);
+    });
   }, []);
 
-  useEffect(()=>{
-    if (!session){
-      return
+  useEffect(() => {
+    if (!session) {
+      return;
     }
     axios.get('/api/address').then((response) => {
       const { name, email, city, postalCode, streetAddress, state } =
@@ -116,7 +136,7 @@ export default function CartPage() {
       setStreetAddress(streetAddress);
       setState(state);
     });
-  }, [session])
+  }, [session]);
 
   function moreOfThisProduct(id) {
     addProduct(id);
@@ -141,10 +161,10 @@ export default function CartPage() {
     }
   }
 
-  let total = 0;
+  let productsTotal = 0;
   for (const productId of cartProducts) {
     const price = products.find((p) => p._id === productId)?.price || 0;
-    total += price;
+    productsTotal += price;
   }
 
   if (isSuccess) {
@@ -197,7 +217,8 @@ export default function CartPage() {
                           >
                             -
                           </Button>
-                          {cartProducts.filter((id) => id === product._id)
+                          {
+                            cartProducts.filter((id) => id === product._id)
                               .length
                           }
                           <Button
@@ -215,10 +236,17 @@ export default function CartPage() {
                         </td>
                       </tr>
                     ))}
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td>Total ${total.toFixed(2)}</td>
+                    <tr className="subtotal">
+                      <td colSpan={2}>Productos</td>
+                      <td>${productsTotal.toFixed(2)}</td>
+                    </tr>
+                    <tr className="subtotal">
+                      <td colSpan={2}>Envio</td>
+                      <td>${Number(shippingFee).toFixed(2)}</td>
+                    </tr>
+                    <tr className="subtotal total">
+                      <td colSpan={2}>Total</td>
+                      <td>${(Number(productsTotal) + Number(shippingFee)).toFixed(2)}</td>
                     </tr>
                   </tbody>
                 </Table>
@@ -275,7 +303,7 @@ export default function CartPage() {
                   onChange={(ev) => setState(ev.target.value)}
                 />
                 <Button onClick={goToPayment} black block>
-                  Continua Con El Pago
+                  Pagar
                 </Button>
               </Box>
             </RevealWrapper>
