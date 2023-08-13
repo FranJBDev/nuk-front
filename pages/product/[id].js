@@ -8,6 +8,7 @@ import { mongooseConnect } from '@/lib/mongoose';
 import { Product } from '@/models/Product';
 import styled from 'styled-components';
 import FlyingButton from '@/components/FlyingButton';
+import ProductReviews from '@/components/ProductReviews';
 
 const ColWrapper = styled.div`
   display: grid;
@@ -54,6 +55,7 @@ export default function ProductPage({ product }) {
             </PriceRow>
           </div>
         </ColWrapper>
+        <ProductReviews product={product}/>
       </Center>
     </>
   );
