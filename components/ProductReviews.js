@@ -119,7 +119,7 @@ export default function ProductReviews({ product }) {
           <WhiteBox>
             <Subtitle>Todas las reseñas</Subtitle>
             {reviewsLoading && <Spinner fullWidth={true} />}
-            {reviews.length === 0 && <p>No reviews</p>}
+            {reviews.length === 0 && <p>No hay reseñas para este producto.</p>}
             {reviews.length > 0 &&
               reviews.map((r) => (
                 <ReviewWrapper key={r._id}>

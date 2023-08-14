@@ -11,6 +11,7 @@ import WhiteBox from '@/components/WhiteBox';
 import axios from 'axios';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { RevealWrapper } from 'next-reveal';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
@@ -35,6 +36,24 @@ const WishedProductGrid = styled.div`
   gap: 40px;
 `;
 
+const NavLink = styled(Link)`
+  gap: 20px;
+  display: block;
+  color: #aaa;
+  text-decoration: none;
+  min-width: 30px;
+  padding: 10px 0;
+  
+  @media screen and (min-width: 768px) {
+    padding: 0;
+  }
+`;
+
+const NavWrapper = styled.div`
+  padding: 20px;
+  text-align: center;
+`
+
 export default function AccountPage() {
   const { data: session } = useSession();
   const [name, setName] = useState('');
@@ -45,10 +64,10 @@ export default function AccountPage() {
   const [state, setState] = useState('');
   const [addressLoaded, setAddressLoaded] = useState(true);
   const [wishListLoaded, setWishListLoaded] = useState(true);
-  const [ordersLoaded, setOrdersLoaded] = useState(true)
+  const [ordersLoaded, setOrdersLoaded] = useState(true);
   const [wishedProducts, setWishedProducts] = useState([]);
   const [activeTab, setActiveTab] = useState('Ordenes');
-  const [orders, setOrders] = useState([])
+  const [orders, setOrders] = useState([]);
 
   async function logout() {
     await signOut({
@@ -74,7 +93,7 @@ export default function AccountPage() {
 
     setAddressLoaded(false);
     setWishListLoaded(false);
-    setOrdersLoaded(false)
+    setOrdersLoaded(false);
     axios.get('/api/address').then((response) => {
       const { name, email, city, postalCode, streetAddress, state } =
         response.data;
@@ -92,10 +111,10 @@ export default function AccountPage() {
       setWishListLoaded(true);
     });
 
-    axios.get('/api/orders').then(response =>{
-      setOrders(response.data)
-      setOrdersLoaded(true)
-    })
+    axios.get('/api/orders').then((response) => {
+      setOrders(response.data);
+      setOrdersLoaded(true);
+    });
   }, [session]);
 
   function productRemovedFromWishlist(idToRemove) {
@@ -119,55 +138,50 @@ export default function AccountPage() {
                 />
                 {activeTab === 'Ordenes' && (
                   <>
-                  {!ordersLoaded && (
-                    <Spinner fullWidth={true} />
-                  )}
-                  {ordersLoaded && (
-                    <div>
-                      {!session && (
-                        <p>
-                          Ingresa para ver tus ordenes.
-                        </p>
-                      )}
-                      {orders.length > 0 && orders.map(o =>(
-                        <SingleOrder key={o._id} {...o} />
-                      ))}
-                    </div>
-                  )}
+                    {!ordersLoaded && <Spinner fullWidth={true} />}
+                    {ordersLoaded && (
+                      <div>
+                        {!session && <p>Ingresa para ver tus ordenes.</p>}
+                        {orders.length > 0 &&
+                          orders.map((o) => <SingleOrder key={o._id} {...o} />)}
+                      </div>
+                    )}
                   </>
                 )}
                 {activeTab === 'Lista de deseos' && (
-                <>
-                  {!wishListLoaded && <Spinner fullWidth={true} />}
+                  <>
+                    {!wishListLoaded && <Spinner fullWidth={true} />}
 
-                  {wishListLoaded && (
-                    <>
-                      <WishedProductGrid>
-                        {wishedProducts.length > 0 &&
-                          wishedProducts.map((wp) => (
-                            <ProductBox
-                              key={wp._id}
-                              {...wp}
-                              wished={true}
-                              onRemoveFromWishlist={productRemovedFromWishlist}
-                            />
-                          ))}
-                      </WishedProductGrid>
+                    {wishListLoaded && (
+                      <>
+                        <WishedProductGrid>
+                          {wishedProducts.length > 0 &&
+                            wishedProducts.map((wp) => (
+                              <ProductBox
+                                key={wp._id}
+                                {...wp}
+                                wished={true}
+                                onRemoveFromWishlist={
+                                  productRemovedFromWishlist
+                                }
+                              />
+                            ))}
+                        </WishedProductGrid>
 
-                      {wishedProducts.length === 0 && (
-                        <>
-                          {session && <p>Tu lista esta vacia</p>}
-                          {!session && (
-                            <p>
-                              Ingresa para agregar productos a tu lista de
-                              deseos.
-                            </p>
-                          )}
-                        </>
-                      )}
-                    </>
-                  )}
-                </>
+                        {wishedProducts.length === 0 && (
+                          <>
+                            {session && <p>Tu lista esta vacia</p>}
+                            {!session && (
+                              <p>
+                                Ingresa para agregar productos a tu lista de
+                                deseos.
+                              </p>
+                            )}
+                          </>
+                        )}
+                      </>
+                    )}
+                  </>
                 )}
               </WhiteBox>
             </RevealWrapper>
@@ -241,6 +255,9 @@ export default function AccountPage() {
                     Ingresar con Google
                   </Button>
                 )}
+                <NavWrapper>
+                  <NavLink href={'/privacy'}>Aviso de Privacidad </NavLink>
+                </NavWrapper>
               </WhiteBox>
             </RevealWrapper>
           </div>
