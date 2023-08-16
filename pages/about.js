@@ -7,7 +7,7 @@ export default function About(){
         <Header />
         <Center>
         <h3>Quienes somos</h3>
-        <p>Nuk es una empresa dedica a...</p> 
+        <p>Nuk es una empresa dedicada a...</p> 
         </Center>
         </>
     )
