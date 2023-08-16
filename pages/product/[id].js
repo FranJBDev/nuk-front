@@ -9,6 +9,7 @@ import { Product } from '@/models/Product';
 import styled from 'styled-components';
 import FlyingButton from '@/components/FlyingButton';
 import ProductReviews from '@/components/ProductReviews';
+import ShareIcon from '@/components/icons/ShareIcon';
 
 const ColWrapper = styled.div`
   display: grid;
@@ -52,10 +53,11 @@ export default function ProductPage({ product }) {
                   Agregar Al Carrito
                 </FlyingButton>
               </div>
+              {/* <ShareIcon /> */}
             </PriceRow>
           </div>
         </ColWrapper>
-        <ProductReviews product={product}/>
+        <ProductReviews product={product} />
       </Center>
     </>
   );
